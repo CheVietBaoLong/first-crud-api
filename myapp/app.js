@@ -20,7 +20,7 @@ let tasks= [
 ]
 app.get('/', (req, res) => {
   // res.send('Hello World!');
-  res.json(
+  res.status(200).json(
     {name: 'Task API',
     version: '1.0',
     endpoints: ['/tasks']
@@ -32,7 +32,7 @@ app.get('/health', (req, res) => {
 })
 
 app.get('/tasks', (req, res) => {
-  res.json(tasks);
+  res.status(200).json(tasks);
 })
 
 app.get('/tasks/:id', (req, res) => {
@@ -41,7 +41,7 @@ app.get('/tasks/:id', (req, res) => {
   if (!task) {
     return res.status(404).json({error: 'Task 99 not found'});
   }
-  res.json(task);
+  res.status(200).json(task);
 });
 
 app.post('/tasks', (req,res) => {
