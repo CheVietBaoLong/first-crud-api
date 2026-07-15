@@ -45,8 +45,63 @@ app.post('/tasks', (req,res) => {
     done: false
   }
   tasks.push(newTask);
-  res.json(newTask);
+  res.status(201).json(newTask);
 })
+
+app.put('/tasks/:id', (req,res) => {
+  const taskId = parseInt(req.params.id);
+  const task = tasks.find(task => task.id === taskId);
+  
+  
+  // console.log(req.body);
+  // console.log(typeof req.body.done);
+
+  //Unknown ID
+  if (!task) {
+    res.status(404).json({error: 'Task not found'});
+  }
+  
+  const {title, done} = req.body;
+
+  // Empty body
+  if (title === undefined && done === undefined) {
+    res.status(400).json({error: 'Title or done is required'});
+  };
+
+  //Invalid title
+  if (title !== undefined && (title.trim() === '' || typeof title !== 'string')) {
+    res.status(400).json({error: 'Title cannot be empty'});
+  }
+
+  //Invalid done
+  if (done !== undefined && typeof done !== 'boolean') {
+    res.status(400).json({error: 'Done must be a boolean'});
+  }
+  if (title !== undefined) {
+    task.title = title;
+  }
+  if (done !== undefined) {
+    task.done = done;
+  }
+  res.json(task);
+});
+
+
+app.delete('/tasks/:id', (req,res) => {
+  const taskId = parseInt(req.params.id);
+  const task = tasks.find(task => task.id === taskId);
+
+  if (!task) {
+    res.status(404).json({error: 'Task not found'});
+  }
+
+  tasks = tasks.filter(task => task.id !== taskId);
+
+  //We can use filter for splice in java, like del in python
+  //const taskIndex = tasks.findIndex(task => task.id === id)
+  //tasks.splice(taskIndex, 1);
+  res.status(204).json({message: 'Task deleted successfully'});
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
