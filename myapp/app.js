@@ -1,9 +1,19 @@
 const express = require('express');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const openapi = require('./openapi.json')
 const port = 3000;
 
+
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openapi)
+);
+
 app.use(express.json());
-tasks= [
+
+let tasks= [
   {id : 1, title: 'Task 1', completed: true},
   {id : 2, title: 'Task 2', completed: true},
   {id : 3, title: 'Task 3', completed: false},
